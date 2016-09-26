@@ -10,7 +10,12 @@ def get_metadata(image_name):
         if data:
             for (tag, value) in data.items():
                 tagname = TAGS.get(tag, tag)
-                print(str(tagname) + '\t' + str(value) + '\n')
+                if tagname == 'DateTimeOriginal':
+                    print(str(tagname) + ':\t' + str(value))
+                if tagname == 'Make':
+                    print(str(tagname) + ':\t' + str(value))
+                if tagname == 'Model':
+                    print(str(tagname) + ':\t' + str(value))
     except:
         print('Image data not found')
 
