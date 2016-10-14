@@ -31,7 +31,26 @@ def camera_data(data):
     return {key:value for key,value in decoded.items() if key in camera_tags()}
 
 
-def convert_to_degress(value):
+def get_lat_lon(exif_data):
+    try:
+        gps_lat = exif_data[34853][2]
+        lat = convert_to_degrees(gps_lat)
+        gps_lon = exif_data[34853][4]
+        lon = convert_to_degrees(gps_lon)
+
+        if exif_data[34853][1] != 'N':
+            lat *= -1
+
+        if exif_data[34853][3] != 'E':
+            lon *= -1
+
+        return lat, lon
+
+    except KeyError:
+        return None
+
+
+def convert_to_degrees(value):
     """Change gps exif data into degrees."""
     d0 = value[0][0]
     d1 = value[0][1]
@@ -55,8 +74,12 @@ def main():
 
     if args.image:
         exif = get_exif(args.image)
+        # Print camera information.
         camera_info = camera_data(exif)
         print(camera_info)
+        # Pring gps information.
+        gps = get_lat_lon(exif)
+        print(gps)
     else:
         print(parser.usage)
 
